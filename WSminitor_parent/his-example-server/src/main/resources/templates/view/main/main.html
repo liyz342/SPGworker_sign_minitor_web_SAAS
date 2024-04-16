@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all"/>
+    <style>
+        #one,#two,#three,#four,#five,#six,#seven{
+            display: inline;
+            font-size: 15px;
+            left: 100px;
+            position: absolute;
+
+        }
+        #eight{
+            display: inline;
+            font-size: 15px;
+            left: 370px;
+            position: absolute;
+        }
+        .span{
+            position: absolute;
+            padding-left:30px ;
+            font-size: 15px;
+        }
+        .day{
+          margin-left:20px;
+        }
+        li{
+            float: left;
+        }
+        #big{
+            width: 1012px;
+            height: 370px;
+            border: 1px solid rgb(232,232,232);
+            position: relative;
+            top: 240px;
+            left: 100px;
+            border-radius: 2px;
+        }
+        #div{
+
+            width: 972px;
+            height: 295px;
+            border: 1px solid rgb(232,232,232);
+            position: relative;
+            top: 45px;
+            left: 20px;
+            border-radius: 3px;
+            color:rgb(51,51,51);
+        }
+        .pai{
+            position: absolute;
+            top: 10px;
+            font-size: 17px;
+            left: 20px;
+        }
+        .container{
+          position: absolute;
+        }
+        .work{
+            margin-top: 10px;
+            width: 480px;
+            height: 160px;
+            border: 1px solid rgb(232,232,232);
+            float: left;
+            border-radius: 3px;
+            background: rgb(65, 120, 178);
+        }
+        #work2{
+            position: absolute;
+            left: 632px;
+        }
+        #work1{
+            position: absolute;
+            left: 100px;
+        }
+        .img{
+            margin-top: 30px;
+            margin-left: 50px;
+        }
+        .num{
+            margin-left:45px;
+            margin-top: 15px;
+            color: #fff;
+        }
+        .total{
+            margin-left:200px;
+            margin-top: 30px;
+            color: #fff;
+        }
+        .desc{
+            margin-left:200px;
+            margin-top: -90px;
+            color: #fff;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="work" id="work1">
+        <div class="row">
+            <div class="img">
+                <a><img src="images/one.jpg"/></a>
+            </div>
+            <div class="num"><h5>今日体征监控人数:&nbsp;<span class="currentNum"></span></h5></div>
+            <div class="desc"><h5>体征监控概况</h5></div>
+            <div class="total"><h3>体征监控总人数:&nbsp;<span class="Total"></span></h3></div>
+        </div>
+    </div>
+    <div class="work" id="work2">
+        <div class="row">
+            <div class="img">
+                <a><img src="images/two.jpg"/></a>
+            </div>
+            <div class="num"><h5>今日体征异常人数:&nbsp;<span class="currentUnhealth"></span></h5></div>
+            <div class="desc"><h5>体征异常概况</h5></div>
+            <div class="total"><h3>异常总人数:&nbsp;<span class="unhealth"></span></h3></div>
+        </div>
+    </div>
+</div>
+<div id="big">
+    <span class="pai">监控信息</span>
+    <div id="statusListTable" style="margin-top: 50px;"></div>
+    <hr>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript" th:inline="none">
+    layui.use([ 'jquery', 'layer', 'form', 'table'  ], function() {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+
+        // 初始化表格
+        table.render({
+            elem: '#statusListTable', // 指定表格容器
+            height: 300, // 表格高度，根据需要调整
+            cols: [[
+                {field: 'workerId',title: '工号', align: 'center'},
+                {field: 'workerName', title: '工人姓名', align: 'center'},
+                {field: 'statusDate', title: '监测日期', align: 'center'},
+                {field: 'BP', title: '血压',
+                    templet: function(d){
+                    return d.sbp + '/' +d.dbp + 'mmHg';
+                    },
+                    align: 'center'},
+                {field: 'saO2', title: '血氧浓度',
+                    templet: function(d){
+                    return d.saO2 + '%';
+                    },
+                    align: 'center'},
+                {field: 'temperature', title: '体温',
+                    templet: function(d){
+                        return d.temperature + '摄氏度';
+                    },
+                    align: 'center'},
+                {field: 'status', title: '体征状况',
+                    templet: function (d){
+                    if(d.status == 0)
+                        return '正常';
+                    return '异常';
+                    }, align: 'center'},
+                //我不希望statusId暴露在表格中
+                {field: 'statusId', title: '监测编号', align: 'center',hide: true}
+                // 您可以根据需要添加更多的列
+            ]],
+            page: true,
+            limit: 100,
+            limits: [10,100,200],
+            data: [] // 初始数据为空，将通过AJAX动态加载
+        });
+        // AJAX获取数据并更新表格
+        $.ajax({
+            url: 'main/statusList',
+            dataType: 'json',
+            type: 'post',
+            success: function(data){
+                //console.log(data);
+                // 将数据添加到表格中
+                table.reload('statusListTable', {
+                    data: data
+                });
+            },
+            error: function(xhr, textStatus, errorThrown){
+                console.error("Error fetching data: ", textStatus, errorThrown);
+            }
+        });
+        // 点击表项时跳转到对应的报告页面
+        table.on('row',function (obj){
+            //console.log("被点击了");
+            var workerId = obj.data.workerId;
+            var statusId = obj.data.statusId;
+            var queryParams = 'workerId=' + encodeURIComponent(workerId) + '&statusId=' + encodeURIComponent(statusId);
+            var reportUrl = 'report/report?'+queryParams;
+            layer.open({
+                type: 2,
+                title: '报告详情',
+                area: ['800px', '600px'], // 定义层的大小
+                content: reportUrl, // 指定报告页面的URL
+                maxmin: true, // 允许全屏最小化
+                anim: -1 // 定义动画效果
+            });
+            /*
+            $.ajax({
+                url: 'report/selReport?'+queryParams,
+                dataType: 'json',
+                type: 'get',
+                success: function (data) {
+                    console.log(data)
+                }
+            })
+             */
+        });
+
+        $.ajax({
+            url: 'main/currentNum',
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+                $(".currentNum").text(data);
+            }
+        })
+        $.ajax({
+        url: 'main/Total',
+        dataType: 'json',
+        type: 'post',
+        success: function (data) {
+            $(".Total").text(data);
+        }
+    })
+        $.ajax({
+            url: 'main/unhealthTotal',
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+               $(".unhealth").text(data);
+            }
+        })
+        $.ajax({
+            url: 'main/currentUnhealth',
+            dataType: 'json',
+            type: 'post',
+            success: function (data) {
+                $(".currentUnhealth").text(data);
+            }
+        })
+    });
+
+</script>
+</body>
+</html>

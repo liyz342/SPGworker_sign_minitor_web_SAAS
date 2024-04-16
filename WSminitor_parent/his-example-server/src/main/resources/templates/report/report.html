@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>报告详情</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all"/>
+    <style>
+        hr {
+            margin-left: 17%;   /* 左边距为页面宽度的20% */
+            margin-right: 17%;  /* 右边距为页面宽度的20% */
+            border: 0;          /* 移除默认边框 */
+            height: 1px;        /* 设置高度为1像素 */
+            background-color: #ccc; /* 设置背景颜色为灰色 */
+        }
+        .work {
+            margin: 0 auto; /* 居中显示 */
+            width: 600px; /* 根据需要调整宽度 */
+            background-color: rgb(65, 120, 178); /* 设置背景颜色 */
+            color: white; /* 设置文字颜色为白色 */
+            font-weight: bold; /* 加粗文字 */
+            padding: 10px; /* 添加内边距 */
+            box-sizing: border-box; /* 确保宽度包含padding和border */
+        }
+
+        .work h5 {
+            margin: 10px 0; /* 设置<h5>元素的上下外边距 */
+        }
+
+        .work span {
+            display: inline-block; /* 使<span>元素表现为块级元素 */
+            padding-left: 10px; /* 添加左内边距 */
+        }
+        /* 其他样式保持不变 */
+
+        /* 设置图片容器的样式 */
+        .photo-container {
+            position: fixed; /* 固定定位，相对于视口 */
+            right: 150px; /* 距离页面右侧20px */
+            top: 22%; /* 距离页面顶部50% */
+            transform: translateY(-50%); /* 垂直居中 */
+            max-width: 150px; /* 最大宽度 */
+            border: 1px solid #ccc; /* 边框 */
+            background-color: #f0f0f0; /* 背景颜色 */
+            padding: 1px; /* 内边距 */
+            box-sizing: border-box; /* 确保宽度和高度包含内边距 */
+            display: inline-block; /* 内联块级显示 */
+            text-align: right; /* 文字右对齐（如果需要） */
+            z-index: 1000; /* 确保图片在最上层 */
+        }
+
+        /* 设置图片的样式 */
+        .photo-container img {
+            width: 100%; /* 宽度填满容器 */
+            height: auto; /* 高度自动，保持原始比例 */
+            display: block; /* 防止图片下方出现空隙 */
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" id = "workerIdInput" th:value="${workerId}"></input>
+<input type="hidden" id = "statusIdInput" th:value="${statusId}"></input>
+<hr>
+<div class = "photo-container" id="photo">
+    <a><img src="../images/photo_face.jpg" alt="Photo Face" /></a>
+</div>
+<div class = "work" id = 'worker-msg'>
+    <h5>工号:<span id="workerId"></span></h5>
+    <h5>工人姓名:<span id="workerName"></span></h5>
+    <h5>年龄:<span id="years"></span></h5>
+    <h5>性别:<span id="gender"></span></h5>
+    <h5>部门:<span id="department"></span></h5>
+    <h5>职位:<span id="position"></span></h5>
+</div>
+<hr>
+<div class = "work" id = 'report-msg'>
+    <h5>报告日期:<span id="statusDate"></span></h5>
+    <h5>体温:<span id="temperature"></span></h5>
+    <h5>心率:<span id="heartRate"></span></h5>
+    <h5>血压:<span id="BP"></span></h5>
+    <h5>血氧:<span id="SaO2"></span></h5>
+    <h5>疾病或重大手术史:<span id="healthStatus"></span></h5>
+    <h5>报告结果:<span id="reportResult"></span></h5>
+</div>
+<hr>
+<script th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript" th:inline="none">
+    layui.use(['jquery', 'layer'], function(){
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        function initPage(){
+            var workerId = $('#workerIdInput').val();
+            var statusId = $('#statusIdInput').val();
+            console.log(workerId, statusId);
+            var queryParams = 'workerId=' + encodeURIComponent(workerId) + '&statusId=' + encodeURIComponent(statusId);
+
+            $.ajax({
+                url: '/report/selReport?'+queryParams,
+                dataType: 'json',
+                type: 'get',
+                success: function(data){
+                    console.log(data[0].workerName, data[0].workerId, data[0].dateOfBirth, data[0].gender, data[0].department, data[0].position)
+                    document.getElementById('workerId').textContent = data[0].workerId;
+                    document.getElementById('workerName').textContent = data[0].workerName;
+
+                    var currentYear = new Date().getFullYear();
+                    var years = currentYear - parseInt(data[0].dateOfBirth.substring(0, 4), 10);;
+                    document.getElementById('years').textContent = years + '岁';
+
+
+                    document.getElementById('gender').textContent = data[0].gender;
+                    document.getElementById('department').textContent = data[0].department;
+                    document.getElementById('position').textContent = data[0].position;
+                    document.getElementById('statusDate').textContent = data[0].statusDate;
+                    document.getElementById('temperature').textContent = data[0].temperature + '℃';
+                    document.getElementById('heartRate').textContent = data[0].heartRate + '次/每分钟';
+                    document.getElementById('BP').textContent = data[0].sbp + '/' + data[0].dbp + 'mmHg';
+                    document.getElementById('SaO2').textContent = data[0].saO2 + '%';
+                    document.getElementById('healthStatus').textContent = data[0].healthStatus;
+                    if(data[0].status == 1){
+                        document.getElementById('reportResult').textContent = '体征检测结果异常，请立刻停止作业并休息！';
+                    }
+                    else if(data[0].healthStatus != '良好'){
+                        document.getElementById('reportResult').textContent = '体征检测结果正常，如作业过程中有不适，请适当休息';
+                    }
+                    else{
+                        document.getElementById('reportResult').textContent = '体征检测结果正常，允许作业';
+                    }
+                }
+            });
+
+
+        }
+        initPage();
+    });
+
+
+</script>
+</body>
+</html>

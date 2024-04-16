@@ -1,0 +1,25 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wsminitor.hisexampleserver.mapper.MainMapper">
+
+    <select id="statusList" resultType="WorkersStatus">
+        select * from workers_status order by statusId desc limit 200
+    </select>
+    <select id="currentNum" resultType="Integer">
+      select count(*) from workers_status where DATE_FORMAT(statusDate,'%Y-%m-%d')=DATE_FORMAT(SYSDATE(),'%Y-%m-%d')
+     </select>
+    <select id="currentUnhealth" resultType="Integer">
+         SELECT count(*) FROM workers_status where DATE_FORMAT(statusDate,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d') and status != 0
+     </select>
+    <!--检测总数-->
+    <select id="Total" resultType="Integer">
+         SELECT count(*) FROM workers_status
+     </select>
+    <!--异常总数-->
+    <select id="unhealthTotal" resultType="Integer">
+         select count(*) from workers_status  where status!=0
+     </select>
+
+</mapper>
