@@ -54,7 +54,7 @@ public class CXiangmuPayController {
         Integer updxiang = cXiangmuPayService.updxiang(perid);
         return updxiang;
     }
-    //进入项目检查页面
+    //进入体征监测页面
     @RequestMapping("seljian")
     public Object seljian(){
         return "outpaient/jiancha";

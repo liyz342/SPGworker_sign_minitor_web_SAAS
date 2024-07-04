@@ -5,8 +5,20 @@
     <title>处方划价</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
     <style>
-        .nam{
+        .nam-s{
             width: 80px;
+            font-size:16px;
+            color: #737383;
+            padding-left: 20px;
+        }
+        .nam-m{
+            width: 110px;
+            font-size:16px;
+            color: #737383;
+            padding-left: 20px;
+        }
+        .nam-l{
+            width: 180px;
             font-size:16px;
             color: #737383;
             padding-left: 20px;
@@ -14,6 +26,29 @@
         .sbb{
             width: 150px;
             text-align: center;
+        }
+        /* 按钮居中样式 */
+        .button-center {
+            display: flex; /* 使用Flexbox布局 */
+            align-items: center; /* 垂直居中 */
+            justify-content: center; /* 水平居中 */
+        }
+        .form-table {
+            width: 90%; /* 表格宽度 */
+            border-collapse: collapse; /* 边框合并 */
+        }
+        .form-table td {
+            padding: 10px 5px; /* 增加内边距 */
+            border-bottom: 1px solid #eaeaea; /* 添加横线 */
+        }
+
+        .form-table tr {
+            height: 25px; /* 行高 */
+        }
+        .report-style {
+            font-family: 'Arial', sans-serif;
+            white-space: pre-wrap; /* 保持格式 */
+            padding: 10px;
         }
         #repi{
             margin-top:60px;
@@ -68,6 +103,36 @@
             border: 0px;
             border-radius: 2px;
         }
+        /* 弹出层样式 */
+        #asssessmentReport {
+            display: none;
+        }
+        /* 表格样式 */
+        #asssessmentReport-table {
+
+            margin-top: 10px; /* 与div上部的距离 */
+            margin-left: 10px; /* 与div左部的距离 */
+            border-collapse: collapse;
+        }
+        #asssessmentReport-table td {
+            border: 1px solid #C9C5C5; /* 灰色细线边框 */
+            padding: 8px;
+            text-align: left;
+        }
+        .td-width-1 {
+            width: 75px;
+            height: 25px;
+        }
+        .td-width-2 {
+            width: 75px;
+            height: 50px;
+        }
+        .td-width-3 {
+            width: 75px;
+            height: 100px;
+        }
+
+
     </style>
 </head>
 
@@ -75,70 +140,146 @@
 <!--头部显示信息开始-->
 <div>
     <form class="layui-form" method="post" id="dataFrm">
-        <table style="margin-top: 20px;margin-left: 30px;">
+        <table  class="form-table" style="margin-top: 20px;margin-left: 30px;">
             <tr>
-                <td class="nam">姓名:</td>
+                <td class="nam-s">姓名:</td>
                 <td class="valu">
-                    <input id="reid" type="hidden" class="layui-input" readonly name="reportId"/>
-                    <input id="rename" class="layui-input" type="text" readonly name="reportName"/> </td>
-                <td class="nam">身份证号:</td>
-                <td class="valu"><input id="carid" class="layui-input" type="text" readonly name="carid"/> </td>
-                <td class="nam">性别:</td>
-                <td class="valu"><input id="resex" class="layui-input" type="text" readonly/> </td>
-                <td class="nam">年龄:</td>
-                <td class="valu"><input id="age" class="layui-input" type="text" readonly/> </td>
-                <td rowspan="3" class="sbb">
-                    <input id="sbut" type="button" class="layui-btn layui-icon-add-circle-fine" value="选择患者">
-                </td>
+                    <input id="reid" type="hidden" class="layui-input" name="reportId"/>
+                    <input id="workername" class="layui-input" type="text"  name="reportName"/> </td>
+                <td class="nam-s">性别:</td>
+                <td class="valu"><input id="gender" class="layui-input" type="text" /> </td>
+                <td class="nam-s">年龄:</td>
+                <td class="valu-s"><input id="age" class="layui-input" type="text" /> </td>
+                <td class="nam-m">身高（cm）:</td>
+                <td class="valu"><input id="height" class="layui-input" type="text"/> </td>
+                <td class="nam-m">体重（KG）:</td>
+                <td class="valu"><input id="weight" class="layui-input" type="text"/> </td>
             </tr>
             <tr style="height: 10px"></tr>
             <tr>
-                <td class="nam">科室:</td>
-                <td class="valu"><input class="layui-input" id="rede" type="text" readonly/> </td>
-                <td class="nam">医生:</td>
-                <td class="valu"><input class="layui-input" id="redo" type="text" readonly/> </td>
-                <td class="nam">电话:</td>
-                <td class="valu"><input class="layui-input"  id="phone" type="text" readonly/> </td>
-                <td class="nam">挂号费:</td>
-                <td class="valu"><input class="layui-input"  id="price" type="text" readonly/> </td>
+                <td class="nam-m">红细胞计数 RBC :</td>
+                <td class="valu"><input class="layui-input" id="rbc" type="text" /> </td>
+                <td class="nam-m">血红蛋白 HGb:</td>
+                <td class="valu"><input class="layui-input" id="hgb" type="text" /> </td>
+                <td class="nam-m">白细胞计数 WBC :</td>
+                <td class="valu"><input class="layui-input" id="wbc" type="text" /> </td>
+                <td class="nam-m">淋巴细胞计数 LYM :</td>
+                <td class="valu"><input class="layui-input"  id="lym" type="text" /> </td>
+                <td class="nam-m">血小板计数 PLT :</td>
+                <td class="valu"><input class="layui-input"  id="plt" type="text" /> </td>
+            </tr>
+            <tr>
+                <td class="nam-m">总胆固醇 TC :</td>
+                <td class="valu"><input class="layui-input" id="tc" type="text" /> </td>
+                <td class="nam-m">甘油三酯 TG :</td>
+                <td class="valu"><input class="layui-input" id="tg" type="text" /> </td>
+                <td class="nam-l">低密度脂蛋白胆固醇 LDL-C :</td>
+                <td class="valu"><input class="layui-input" id="ldl_c" type="text" /> </td>
+                <td class="nam-l">高密度脂蛋白胆固醇 HDL-C :</td>
+                <td class="valu"><input class="layui-input"  id="hdl_c" type="text" /> </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="nam-m">血糖浓度 BG:</td>
+                <td class="valu"><input class="layui-input" id="bg" type="text" /> </td>
+                <td class="nam-m">肌酐含量 :</td>
+                <td class="valu"><input class="layui-input" id="insulin" type="text" /> </td>
+                <td class="nam-m">血尿素氮 BUN :</td>
+                <td class="valu"><input class="layui-input" id="bun" type="text" /> </td>
+                <td class="nam-m">胰岛素浓度 Cr:</td>
+                <td class="valu"><input class="layui-input"  id="cr" type="text" /> </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="nam-l">球蛋白、总蛋白、白蛋白含量 :</td>
+                <td class="valu"><input class="layui-input" id="protein" type="text" /> </td>
+                <td class="nam-m">血压分布情况 :</td>
+                <td class="valu"><input class="layui-input" id="bp" type="text" /> </td>
+                <td class="nam-m">心率分布情况 :</td>
+                <td class="valu"><input class="layui-input" id="heartRate" type="text" /> </td>
+                <td class="nam-l">体检报告中历史患病情况:</td>
+                <td class="valu"><input class="layui-input"  id="medicalHistory" type="text" /> </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td  class="sbb button-center">
+                    <input id="pbut" type="button" class="layui-btn layui-icon-add-circle-fine" value="开始评估">
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
         </table>
     </form>
 </div>
 <!--头部显示信息结束-->
 
-<!--病号信息弹出层开始-->
-<div style="display: none;padding-top: 20px" id="peopleimgeDiv" >
-    <div id="adddrug1">
-        <input type="text" placeholder="请输入你要查询的信息" id="selinp1" autocomplete="off" >
-        <input type="button" id="selbut1" value="查询"/>
-    </div>
-    <table class="layui-hide" id="userTable" lay-filter="userTable"></table>
-    <div  id="userBar" style="display: none;">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">选择</a>
-    </div>
+<!--弹出层开始-->
+<div style="display: none;padding-top: 20px" id="asssessmentReport" >
+    <table id="asssessmentReport-table">
+        <tr></tr>
+        <tr>
+            <td class="td-width-1">工人姓名</td>
+            <td class="td-width-1"><span id="reportname"></span></td>
+            <td class="td-width-1">性别</td>
+            <td class="td-width-1"><span id="reportgender"></span></td>
+            <td class="td-width-1">年龄</td>
+            <td class="td-width-1"><span id="reportage"></span></td>
+            <td class="td-width-1" colspan="2"></td>
+        </tr>
+        <tr>
+            <td class="td-width-1">红细胞计数 </td>
+            <td class="td-width-1"><span id="reportrbc"></span> </td>
+            <td class="td-width-1">白细胞计数 </td>
+            <td class="td-width-1"><span id="reportwbc"></span> </td>
+            <td class="td-width-1">血小板计数</td>
+            <td class="td-width-1"><span id="reportplt"></span> </td>
+            <td class="td-width-1">血红蛋白</td>
+            <td class="td-width-1"><span id="reporthgb"></span> </td>
+        </tr>
+        <tr>
+            <td class="td-width-1">血糖浓度</td>
+            <td class="td-width-1"><span id="reportbg"></span> </td>
+            <td class="td-width-1">肌酐含量</td>
+            <td class="td-width-1"><span id="reportinsulin"></span> </td>
+            <td class="td-width-1">血尿素氮</td>
+            <td class="td-width-1"><span id="reportbun"></span> </td>
+            <td class="td-width-1">胰岛素浓度</td>
+            <td class="td-width-1"><span  id="reportcr"></span> </td>
+        </tr>
+        <tr>
+
+            <td class="td-width-1">血压分布情况</td>
+            <td class="td-width-1"><span id="reportbp"></span> </td>
+            <td class="td-width-1">心率分布情况</td>
+            <td class="td-width-1"><span id="reportheartRate"></span> </td>
+            <td class="td-width-1" colspan="2">球蛋白、总蛋白、白蛋白含量</td>
+            <td class="td-width-1" colspan="2"><span id="reportprotein"></span> </td>
+        </tr>
+        <tr>
+            <td class="td-width-2" colspan="2">体检报告中历史患病情况 </td>
+            <td class="td-width-2" colspan="6"><span id="reportmedicalHistory"></span> </td>
+        </tr>
+        <tr>
+            <td class="td-width-3" colspan="8"><p><strong>评估结果：</strong><span id="reportresult"></span></p></td>
+        </tr>
+
+    </table>
 </div>
-<!--病号信息弹出层结束-->
-<!--处方页面开始-->
-<div id="repi">
-    <table class="layui-hide" id="repiid" lay-filter="repiid"></table>
-</div>
-<!--处方页面结束-->
-<!--编辑按钮-->
-<div  id="userbian" style="display: none;">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-</div>
-<!--编辑按钮结束-->
-<!--填写病因页面开始-->
-<div style="display: none;padding-top: 20px" id="bingye" >
-    <div style="height: 30px;width: 100px;margin-left:30px;line-height: 30px;">填写用户病状:</div>
-    <textarea id="bingyi" style="width: 600px;margin-left: 30px;height: 300px;" required lay-verify="required" placeholder="请输入症状病状" class="layui-textarea"></textarea>
-    <div style="height: 100px;width: 600px;margin-left:30px;text-align: center;line-height: 100px;">
-        <input type="button" class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-release" id="addbing" style="height:40px;width: 100px;" value="提交">
-        <input type="button" class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-refresh layui-icon-delete" id="qu" style="height:40px;width: 100px;" value="取消" >
-    </div>
-</div>
-<input type="hidden" id="cashier"><!--项目id-->
-<!--填写病因页面结束-->
+<!--弹出层结束-->
+
+
+
 </body>
 <script th:src="@{/layui/layui.js}"></script>
 
@@ -147,150 +288,133 @@
     var hua;
     var xinagmu;
     var people;
-    layui.use([ 'jquery', 'layer', 'form', 'table' ], function() {
-
+    // 在layui的use函数中
+    layui.use(['jquery', 'layer', 'form', 'table'], function() {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
-        //查询患者信息表
-        var mainIndex;
-        $("#sbut").click(function(){
-            mainIndex=layer.open({
-                type:1,
-                title:'选择病人',
-                content:$("#peopleimgeDiv"),
-                area:['1300px','500px'],
-                success:function(index){
-                    people=table.render({
-                        elem: '#userTable'   //渲染的目标对象
-                        ,url:'../outpaientcc/selpreson' //数据接口
-                        ,title: '用户数据表'//数据导出来的标题
-                        ,cellMinWidth:200 //设置列的最小默认宽度
-                        /*,parseData:function(res){
-                             return{
-                                 "code":0,//如果不用分页后台没有用分页设置code:0的话需要加上这句话
-                                 data:res//要不然会报会报返回的数据类型不符合规范
-                             }
-                         }*/
-                        ,page: 1  //是否启用分页, limits: [10, 20, 30]
-                        ,limits: [5, 10, 15]
-                        ,limit: 5//默认采用3
-                        ,cols: [[   //列表数据
-                            {field:'reportId', title:'单据号',align:'center',width:"8%"}
-                            ,{field:'reportName', title:'姓名',align:'center',width:"8%"}
-                            ,{field:'phone', title:'电话',align:'center',width:"8%"}
-                            ,{field:'carid', title:'身份证号',align:'center',width:"8%"}
-                            ,{field:'sex', title:'性别',align:'center',width:"8%"}
-                            ,{field:'age', title:'年龄',align:'center',width:"8%"}
-                            ,{field:'department', title:'科室',align:'center',width:"8%"}
-                            ,{field:'doctorName', title:'医生',align:'center',width:"8%"}
-                            ,{field:'type', title:'挂号类别',align:'center',width:"8%"}
-                            ,{field:'time', title:'挂号时间',align:'center',width:"8%"}
-                            ,{field:'price', title:'挂号费',align:'center',width:"8%"}
-                            ,{fixed: 'right', title:'操作', toolbar: '#userBar',align:'center',width:'8%'}
-                        ]]
-                    })
+
+        // 绑定“开始评估”按钮的点击事件
+        $("#pbut").click(function(){
+            // 收集表单数据
+            var reportName = $('#workername').val(); // 姓名
+            var gender = $('#gender').val();       // 性别
+            var age = $('#age').val();             // 年龄
+            var height = $('#height').val();       //身高
+            var weight = $('#weight').val();       //体重
+
+            var rbc = $('#rbc').val();            //红细胞计数RBC
+            var hgb = $('#hgb').val();            //血红蛋白HGb
+            var wbc = $('#wbc').val();            //白细胞计数WBC
+            var lym = $('#lym').val();            //淋巴细胞计数 LYM
+            var plt = $('#plt').val();            //血小板计数 PLT
+
+            var tc = $('#tc').val();              //总胆固醇 TC
+            var tg = $('#tg').val();              //甘油三酯 TG
+            var ldl_c = $('#ldl_c').val();        //低密度脂蛋白胆固醇 LDL-C
+            var hdl_c = $('#hdl_c').val();        //高密度脂蛋白胆固醇 HDL-C
+
+            var bg = $('#bg').val();              //血糖浓度
+            var insulin = $('#insulin').val();    //肌酐含量
+            var cr = $('#cr').val();              //胰岛素浓度
+            var bun = $('#bun').val();            //血尿素氮BUN
+
+            var protein = $('#protein').val();    //球蛋白、总蛋白、白蛋白含量
+            var bp = $('#bp').val();              //血压分布情况
+            var heartRate = $('#heartRate').val();//心率分布情况
+            var medicalHistory = $('#medicalHistory').val(); //体检报告中历史患病情况
+
+            // 使用AJAX将数据发送到后台
+            $.ajax({
+                type: 'POST',
+                url: '/assessment/getAssessmentResult', // 后台Controller中定义的URL映射
+                data: JSON.stringify({
+                    // 将输入数据作为查询参数发送
+                    reportName: reportName,
+                    height: height,
+                    weight : weight,
+                    gender: gender,
+                    age: age,
+                    rbc: rbc,
+                    hgb: hgb,
+                    wbc: wbc,
+                    lym: lym,
+                    plt: plt,
+                    tc: tc,
+                    tg: tg,
+                    ldl_c: ldl_c,
+                    hdl_c: hdl_c,
+                    bg: bg,
+                    cr: cr,
+                    insulin: insulin,
+                    bun: bun,
+                    protein: protein,
+                    bp: bp,
+                    heartRate: heartRate,
+                    medicalHistory: medicalHistory
+                }),
+                contentType: "application/json; charset=utf-8",
+                success: function(result) {
+                    // 从输入框中获取数据
+                    // 从输入框中获取数据
+                    var reportName = $('#workername').val(); // 姓名
+                    var age = $('#age').val();               // 年龄
+                    var gender = $('#gender').val();          // 性别
+                    var rbc = $('#rbc').val();            //红细胞计数RBC
+                    var hgb = $('#hgb').val();            //血红蛋白HGb
+                    var wbc = $('#wbc').val();            //白细胞计数WBC
+                    var lym = $('#lym').val();            //淋巴细胞计数 LYM
+                    var plt = $('#plt').val();            //血小板计数 PLT
+
+                    var tc = $('#tc').val();              //总胆固醇 TC
+                    var tg = $('#tg').val();              //甘油三酯 TG
+                    var ldl_c = $('#ldl_c').val();        //低密度脂蛋白胆固醇 LDL-C
+                    var hdl_c = $('#hdl_c').val();        //高密度脂蛋白胆固醇 HDL-C
+
+                    var bg = $('#bg').val();              //血糖浓度
+                    var insulin = $('#insulin').val();    //肌酐含量
+                    var cr = $('#cr').val();              //胰岛素浓度
+                    var bun = $('#bun').val();            //血尿素氮BUN
+
+                    var protein = $('#protein').val();    //球蛋白、总蛋白、白蛋白含量
+                    var bp = $('#bp').val();              //血压分布情况
+                    var heartRate = $('#heartRate').val();//心率分布情况
+                    var medicalHistory = $('#medicalHistory').val(); //体检报告中历史患病情况
+
+                    // 将获取的数据设置到弹出层的相应位置
+                    $('#reportname').text(reportName);
+                    $('#reportage').text(age);
+                    $('#reportgender').text(gender);
+                    $('#reportresult').text(result);
+                    $('#reportrbc').text(rbc);            //红细胞计数RBC
+                    $('#reporthgb').text(hgb);            //血红蛋白HGb
+                    $('#reportwbc').text(wbc);            //白细胞计数WBC
+                    $('#reportplt').text(plt);            //血小板计数 PLT
+                    $('#reportbg').text(bg);              //血糖浓度
+                    $('#reportinsulin').text(insulin);    //肌酐含量
+                    $('#reportcr').text(cr);              //胰岛素浓度
+                    $('#reportbun').text(bun);            //血尿素氮BUN
+                    $('#reportprotein').text(protein);    //球蛋白、总蛋白、白蛋白含量
+                    $('#reportbp').text(bp);              //血压分布情况
+                    $('#reportheartRate').text(heartRate);//心率分布情况
+                    $('#reportmedicalHistory').text(medicalHistory); //体检报告中历史患病情况
+                    // 服务器返回的评估结果
+                    // 显示包含报告的弹出层
+                    layer.open({
+                        type: 1,
+                        title: '评估结果',
+                        content: $('#asssessmentReport').html(),
+                        area: ['800px', '500px'] // 根据内容调整尺寸
+                    });
+                },
+                error: function(xhr) {
+                    // 错误处理
+                    layer.msg('评估失败：' + xhr.responseText);
+                    console.log(xhr.responseText);
                 }
             });
         });
-        //监听患者行工具事件
-        table.on('tool(userTable)', function(obj){
-            var data = obj.data; //获得当前行数据
-            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-            if(layEvent === 'edit'){ //编辑
-                $("#reid").val(data.reportId)
-                $("#rename").val(data.reportName)
-                $("#resex").val(data.sex)
-                $("#age").val(data.age)
-                $("#rede").val(data.department);
-                $("#redo").val(data.doctorName);
-                $("#carid").val(data.carid);
-                $("#phone").val(data.phone);
-                $("#price").val(data.price);
-                var perid=data.reportId;
-                //查询该用户的处方
-                layer.close(mainIndex)
-                wareid=data.value;//获取选中的药房的id
-                hua=table.render({
-                    elem: '#repiid'   //渲染的目标对象
-                    ,url:'../xpay/selcha?perid='+perid //数据接口
-                    ,title: '患者项目'
-                    ,cellMinWidth:200 //设置列的最小默认宽度
-                    ,page: 1  //是否启用分页, limits: [10, 20, 30]
-                    ,limits: [5, 10, 15]
-                    ,limit: 5//默认采用3
-                    ,cols: [[   //列表    数据
-                        {field:'durgname', title:'药品名称',align:'center',width:"15%"}
-                        ,{field:'durgnum', title:'数量',align:'center',width:"15%"}
-                        ,{field:'repiceprice', title:'单价',align:'center',width:"15%"}
-                        ,{field:'repicetotal', title:'小计',align:'center',width:"15%"}
-                        ,{fixld: 'jie', title:'状态',align:'center',width:'15%',templet:function(d){
-                            if(d.jie==null||d.jie==''){
-                                return '<font color=red>未检查</font>'
-                            }else{
-                                return '<font color=blue>已检查</font>'
-                            }
-                            }}
-                        ,{fixed: 'right', title:'操作', toolbar: '#userbian',align:'center',width:'15%'}
-                    ]]
-                })
-            }
-        });
-        var bingying;
-        //打开填写页面
-        function openUpdate(data) {
-            bingying=layer.open({
-                type:1,
-                title:'填写症状',
-                content:$("#bingye"),
-                area:['700px','500px']
-            });
-            $("#bingyi").val(data.jie);
-            $("#cashier").val(data.cashier);
-        }
-        //监听项目表格数据
-        table.on('tool(repiid)', function(obj){
-            var data = obj.data; //获得当前行数据
-            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-            if(layEvent === 'edit'){ //查看
-                openUpdate(data);
-            }
-        });
-        //点击病因提交按钮
-        $("#addbing").click(function(){
-            var reid=$("#reid").val();
-            var bing=$("#bingyi").val();
-            var cashier=$("#cashier").val();
-            $.post("../xpay/addbing",{"reid":reid,"bing":bing,cashier:cashier},function(obj){
-                if(obj>0){
-                    $("#bingyi").val("");
-                    layer.msg("添加成功");
-                    layer.close(bingying);
-                    hua.reload();
-                }else{
-                    $("#bingyi").val("");
-                    layer.close(bingying);
-                    hua.reload();
-                    layer.msg("添加失败");
-                }
-            });
-        })
-        //点击病因取消按钮
-        $("#qu").click(function(){
-            $("#bingyi").val("");
-            layer.close(bingying)
-        })
-        //关闭病况页面
-        $("#qubu").click(function(){
-        })
-        //用户模糊查询
-        $(document).on('click',"#selbut1",function(){
-            var durgname=$("#selinp1").val()
-            people.reload({
-                url:"../outpaientcc/mohu?durgname="+durgname
-            })
-        });
-    })
+    });
 </script>
 </html>

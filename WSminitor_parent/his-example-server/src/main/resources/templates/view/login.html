@@ -14,6 +14,17 @@
             -webkit-background-size: 1920px;
             background-size: 1720px 930px;
         }
+        footer {
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            padding: 20px 0; /* 底部边距 */
+            width: 100%; /* 确保footer宽度 */
+            position: absolute; /* 绝对定位 */
+            bottom: 100px;
+            left: 0;
+            background-color: rgba(255, 255, 255, 0.5); /* 背景颜色，根据需要调整 */
+        }
     </style>
 </head>
 <body class="loginBody">
@@ -43,7 +54,11 @@
     </div>
 
 </form>
-<a href="https://beian.miit.gov.cn/" target="_blank">鄂ICP备2024051314号-1</a>
+<footer>
+    <div class="footer-links">
+        <a href="https://beian.miit.gov.cn/" target="_blank">鄂ICP备2024051314号-1</a>
+    </div>
+</footer>
 <script type="text/javascript" th:src="@{/layui/layui.js}"></script>
 <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
 <script type="text/javascript">

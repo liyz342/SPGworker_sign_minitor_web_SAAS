@@ -15,7 +15,7 @@ spring:
         master:
           url: jdbc:mysql://localhost:3306/his?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
           username: root
-          password: Jnu_2023
+          password: 123456
           type: com.alibaba.druid.pool.DruidDataSource
           init-size: 5
           min-idle: 5
@@ -55,3 +55,6 @@ pagehelper:
   support-methods-arguments: true
   page-size-zero: tre
   params: countSql
+
+app:
+  python-script-path: D:\\lyz_Workstation
