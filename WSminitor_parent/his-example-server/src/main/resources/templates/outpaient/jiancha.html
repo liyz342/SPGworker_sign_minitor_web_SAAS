@@ -193,8 +193,6 @@
                 <td></td>
             </tr>
             <tr>
-                <td class="nam-l">球蛋白、总蛋白、白蛋白含量 :</td>
-                <td class="valu"><input class="layui-input" id="protein" type="text" /> </td>
                 <td class="nam-m">血压分布情况 :</td>
                 <td class="valu"><input class="layui-input" id="bp" type="text" /> </td>
                 <td class="nam-m">心率分布情况 :</td>
@@ -203,6 +201,14 @@
                 <td class="valu"><input class="layui-input"  id="medicalHistory" type="text" /> </td>
                 <td></td>
                 <td></td>
+            </tr>
+            <tr>
+                <td class="nam-l">总蛋白含量 :</td>
+                <td class="valu"><input class="layui-input" id="tpro" type="text" /> </td>
+                <td class="nam-l">白蛋白含量 :</td>
+                <td class="valu"><input class="layui-input" id="alb" type="text" /> </td>
+                <td class="nam-l">球蛋白含量 :</td>
+                <td class="valu"><input class="layui-input" id="glo" type="text" /> </td>
             </tr>
             <tr>
                 <td></td>
@@ -263,8 +269,8 @@
             <td class="td-width-1"><span id="reportbp"></span> </td>
             <td class="td-width-1">心率分布情况</td>
             <td class="td-width-1"><span id="reportheartRate"></span> </td>
-            <td class="td-width-1" colspan="2">球蛋白、总蛋白、白蛋白含量</td>
-            <td class="td-width-1" colspan="2"><span id="reportprotein"></span> </td>
+            <td class="td-width-1" colspan="2">总蛋白含量</td>
+            <td class="td-width-1" colspan="2"><span id="reporttpro"></span> </td>
         </tr>
         <tr>
             <td class="td-width-2" colspan="2">体检报告中历史患病情况 </td>
@@ -320,7 +326,9 @@
             var cr = $('#cr').val();              //胰岛素浓度
             var bun = $('#bun').val();            //血尿素氮BUN
 
-            var protein = $('#protein').val();    //球蛋白、总蛋白、白蛋白含量
+            var tpro = $('#tpro').val();        //总蛋白含量
+            var alb = $('#alb').val();            //白蛋白含量
+            var glo = $('#glo').val();            //球蛋白含量
             var bp = $('#bp').val();              //血压分布情况
             var heartRate = $('#heartRate').val();//心率分布情况
             var medicalHistory = $('#medicalHistory').val(); //体检报告中历史患病情况
@@ -349,7 +357,9 @@
                     cr: cr,
                     insulin: insulin,
                     bun: bun,
-                    protein: protein,
+                    tpro: tpro,
+                    alb: alb,
+                    glo: glo,
                     bp: bp,
                     heartRate: heartRate,
                     medicalHistory: medicalHistory
@@ -377,7 +387,9 @@
                     var cr = $('#cr').val();              //胰岛素浓度
                     var bun = $('#bun').val();            //血尿素氮BUN
 
-                    var protein = $('#protein').val();    //球蛋白、总蛋白、白蛋白含量
+                    var tpro = $('#tpro').val();    //球蛋白、总蛋白、白蛋白含量
+                    var alb = $('#alb').val();
+                    var glo = $('#glo').val();
                     var bp = $('#bp').val();              //血压分布情况
                     var heartRate = $('#heartRate').val();//心率分布情况
                     var medicalHistory = $('#medicalHistory').val(); //体检报告中历史患病情况
@@ -395,7 +407,7 @@
                     $('#reportinsulin').text(insulin);    //肌酐含量
                     $('#reportcr').text(cr);              //胰岛素浓度
                     $('#reportbun').text(bun);            //血尿素氮BUN
-                    $('#reportprotein').text(protein);    //球蛋白、总蛋白、白蛋白含量
+                    $('#reporttpro').text(tpro);    //球蛋白、总蛋白、白蛋白含量
                     $('#reportbp').text(bp);              //血压分布情况
                     $('#reportheartRate').text(heartRate);//心率分布情况
                     $('#reportmedicalHistory').text(medicalHistory); //体检报告中历史患病情况

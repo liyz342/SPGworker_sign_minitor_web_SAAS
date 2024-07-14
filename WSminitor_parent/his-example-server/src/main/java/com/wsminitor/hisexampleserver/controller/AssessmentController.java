@@ -77,6 +77,7 @@ public class AssessmentController {
         System.out.println("python " + pythonScriptPath + "\\hjx.py " + inputParams);
 
         ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath + "\\hjx.py", inputParams);
+        processBuilder.redirectErrorStream(true); // 重定向stderr到stdout
         Process process = processBuilder.start();
         process.waitFor();
 
@@ -86,7 +87,17 @@ public class AssessmentController {
         while ((line = reader.readLine()) != null) {
             output.append(line).append("\n");
         }
-        System.out.println("Default Charset: " + Charset.defaultCharset());
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            // 脚本执行失败，退出状态码非零
+            System.err.println("Script execution failed with exit code: " + exitCode);
+            // 可以在这里输出之前读取的错误信息
+            System.err.println("Error output:\n" + output);
+        } else {
+            // 脚本执行成功
+            System.out.println("Script executed successfully. Output:\n" + output);
+        }
+        //System.out.println("Default Charset: " + Charset.defaultCharset());
         System.out.println(output);
         System.out.println(output.toString().trim());
 
@@ -113,7 +124,9 @@ class AssessmentParams {
     private String insulin;//肌酐含量
     private String cr;//胰岛素含量Cr
     private String bun;//血尿素氮BUN
-    private String protein;//球蛋白、总蛋白、白蛋白含量
+    private String tpro;//球蛋白、总蛋白、白蛋白含量
+    private String alb;
+    private String glo;
     private String bp;//血压
     private String heartRate;//心率
     private String medicalHistory;//体检报告中历史患病情况
@@ -190,8 +203,16 @@ class AssessmentParams {
         this.bun = bun;
     }
 
-    public void setProtein(String protein) {
-        this.protein = protein;
+    public void setTpro(String tpro) {
+        this.tpro = tpro;
+    }
+
+    public void setAlb(String alb) {
+        this.alb = alb;
+    }
+
+    public void setGlo(String glo) {
+        this.glo = glo;
     }
 
     public void setBp(String bp) {
@@ -278,9 +299,7 @@ class AssessmentParams {
         return bun;
     }
 
-    public String getProtein() {
-        return protein;
-    }
+
 
     public String getBp() {
         return bp;
@@ -292,5 +311,17 @@ class AssessmentParams {
 
     public String getMedicalHistory() {
         return medicalHistory;
+    }
+
+    public String getTpro() {
+        return tpro;
+    }
+
+    public String getAlb() {
+        return alb;
+    }
+
+    public String getGlo() {
+        return glo;
     }
 }
